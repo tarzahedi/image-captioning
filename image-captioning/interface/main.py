@@ -2,7 +2,6 @@ from transformers import AutoProcessor, AutoModelForCausalLM
 from PIL import Image
 import requests
 
-
 def open_image(url=None, image_path=None):
     # if a url is provided -> retrieve image via url
     if len(url) > 0:
