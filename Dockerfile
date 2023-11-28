@@ -6,11 +6,11 @@ COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-COPY image-captionig /image-captionig
+COPY image_captioning image_captioning
 COPY setup.py setup.py
 
-RUN pip install .
+# RUN pip install .
 
 COPY Makefile Makefile
 
-CMD uvicorn image-captionig.api.fast:app --host 0.0.0.0 --port $PORT
+CMD uvicorn image_captioning.api.fast:app --host 0.0.0.0 --port 8000
