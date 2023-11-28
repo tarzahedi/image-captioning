@@ -1,6 +1,10 @@
+import pandas as pd
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from image-captionig.interface.main import
+from transformers import AutoProcessor, AutoModelForCausalLM
+import requests
+import io
+from PIL import Image
 app = FastAPI()
 app.state.model = AutoModelForCausalLM.from_pretrained("microsoft/git-base-coco")
 

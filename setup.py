@@ -7,7 +7,7 @@ requirements = [x.strip() for x in content if 'git+' not in x]
 
 setup(name='image-captionig',
       version="1.0",
-      description="Project Description",
+      description="Image Captioning Model",
       packages=find_packages(),
       install_requires=requirements,
       test_suite='tests',

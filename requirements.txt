@@ -8,19 +8,19 @@ wheel>=0.29
 numpy
 pandas
 scikit-learn
+transformers
+requests
 
-# tests/linter
-black
-coverage
-flake8
-pytest
-yapf
+# image processing
+Python-IO
+Pillow
 
 # API
 gcsfs
 google-cloud-storage
 mlflow
-s3fs
+fastapi
+uvicorn
 
 # utilities
 six>=1.14
