@@ -5,10 +5,10 @@ install_requirements:
 	@pip install -r requirements.txt
 
 check_code:
-	@flake8 scripts/* image-captionig/*.py
+	@flake8 scripts/* image-captioning/*.py
 
 black:
-	@black scripts/* image-captionig/*.py
+	@black scripts/* image-captioning/*.py
 
 test:
 	@coverage run -m pytest tests/*.py
@@ -22,8 +22,8 @@ clean:
 	@rm -f .coverage
 	@rm -fr */__pycache__ */*.pyc __pycache__
 	@rm -fr build dist
-	@rm -fr image-captionig-*.dist-info
-	@rm -fr image-captionig.egg-info
+	@rm -fr image-captioning-*.dist-info
+	@rm -fr image-captioning.egg-info
 
 install:
 	@pip install . -U

@@ -1,5 +1,5 @@
 # Data analysis
-- Document here the project: image-captionig
+- Document here the project: image-captioning
 - Description: Project Description
 - Data Source:
 - Type of analysis:
@@ -22,14 +22,14 @@ Unittest test:
 make clean install test
 ```
 
-Check for image-captionig in github.com/{group}. If your project is not set please add it:
+Check for image-captioning in github.com/{group}. If your project is not set please add it:
 
-Create a new project on github.com/{group}/image-captionig
+Create a new project on github.com/{group}/image-captioning
 Then populate it:
 
 ```bash
-##   e.g. if group is "{group}" and project_name is "image-captionig"
-git remote add origin git@github.com:{group}/image-captionig.git
+##   e.g. if group is "{group}" and project_name is "image-captioning"
+git remote add origin git@github.com:{group}/image-captioning.git
 git push -u origin master
 git push -u origin --tags
 ```
@@ -40,12 +40,12 @@ Functionnal test with a script:
 cd
 mkdir tmp
 cd tmp
-image-captionig-run
+image-captioning-run
 ```
 
 # Install
 
-Go to `https://github.com/{group}/image-captionig` to see the project, manage issues,
+Go to `https://github.com/{group}/image-captioning` to see the project, manage issues,
 setup you ssh public key, ...
 
 Create a python3 virtualenv and activate it:
@@ -58,8 +58,8 @@ deactivate; virtualenv -ppython3 ~/venv ; source ~/venv/bin/activate
 Clone the project and install it:
 
 ```bash
-git clone git@github.com:{group}/image-captionig.git
-cd image-captionig
+git clone git@github.com:{group}/image-captioning.git
+cd image-captioning
 pip install -r requirements.txt
 make clean install test                # install and test
 ```
@@ -69,5 +69,5 @@ Functionnal test with a script:
 cd
 mkdir tmp
 cd tmp
-image-captionig-run
+image-captioning-run
 ```
