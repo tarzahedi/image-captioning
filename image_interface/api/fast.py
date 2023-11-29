@@ -1,6 +1,6 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from image_captioning.interface.main import open_image, preprocess, generate_caption
+from image_interface.interface.main import open_image, preprocess, generate_caption
 app = FastAPI()
 
 
@@ -23,7 +23,7 @@ def predict_upload(img_file_buffer):
     return str(caption)
 
 @app.get("/predict_upload")
-def predict_upload(image_path):
+def predict_local_image(image_path):
     image = open_image(image_path=image_path)
     (preprocessor, pixel_values) = preprocess(image)
     caption = generate_caption(preprocessor, pixel_values)

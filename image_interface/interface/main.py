@@ -5,14 +5,14 @@ import requests
 def open_image(url=None, image_path=None, img_file_buffer=None):
     '''opens images via url/image path or image upload'''
     # if a url is provided -> retrieve image via url
-    if len(url) > 0:
-        image = Image.open(requests.get(url=url, stream=True).raw)
+    if url != None:
+        image = Image.open(requests.get(url=url, stream=True).raw).convert('RGB')
     # else retrieve via an image path
-    elif len(image_path) > 0:
-        image = Image.open(image_path)
+    elif image_path != None:
+        image = Image.open(image_path).convert('RGB')
     # add extra functionality to call camera on laptop
     elif img_file_buffer is not None:
-        image = Image.open(img_file_buffer)
+        image = Image.open(img_file_buffer).convert('RGB')
     return image
 
 def preprocess(image):
