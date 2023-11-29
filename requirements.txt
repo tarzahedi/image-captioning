@@ -7,20 +7,24 @@ wheel>=0.29
 # data science
 numpy
 pandas
-scikit-learn
+# scikit-learn
+transformers
+requests
+# tensorflow-macos==2.10.0; sys_platform == 'darwin' and 'ARM' in platform_version # Mac M-chips
+# tensorflow==2.10.0; sys_platform == 'darwin' and 'ARM' not in platform_version # Mac Intel chips
+# tensorflow==2.10.0; sys_platform != 'darwin' # Windows & Ubuntu Intel chips
+torch
 
-# tests/linter
-black
-coverage
-flake8
-pytest
-yapf
+# image processing
+Python-IO
+Pillow
 
 # API
 gcsfs
-google-cloud-storage
-mlflow
-s3fs
+# google-cloud-storage
+# mlflow
+fastapi
+uvicorn
 
 # utilities
 six>=1.14
