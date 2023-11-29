@@ -3,6 +3,7 @@ from PIL import Image
 import requests
 
 def open_image(url=None, image_path=None, img_file_buffer=None):
+    '''opens images via url/image path or image upload'''
     # if a url is provided -> retrieve image via url
     if len(url) > 0:
         image = Image.open(requests.get(url=url, stream=True).raw)
