@@ -13,6 +13,7 @@ def open_image(url=None, image_path=None, img_file_buffer=None):
     # add extra functionality to call camera on laptop
     elif img_file_buffer is not None:
         image = Image.open(img_file_buffer).convert('RGB')
+        image = Image.open(img_file_buffer).convert('RGB')
     return image
 
 def preprocess_generated_caption(model, image):

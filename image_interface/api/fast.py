@@ -23,7 +23,7 @@ def predict_upload(img_file_buffer):
     return str(caption)
 
 @app.get("/predict_upload")
-def predict_upload(image_path):
+def predict_local_image(image_path):
     image = open_image(image_path=image_path)
     caption = preprocess_generated_caption(app.state.model, image)
 
