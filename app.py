@@ -29,15 +29,18 @@ st.header("Lets caption some pictures!")
 # input_url = st.text_input('put url')
 
 # if input_url is not None:
-#     image = Image.open(requests.get(input_url, stream=True).raw).convert("RGB")
-#     st.image(image)
+#     # image = Image.open(requests.get(input_url, stream=True).raw).convert("RGB")
+#     # st.image(image)
 #     params = {"url": input_url}
 #     api_endpoint = "http://127.0.0.1:8000/predict_url"
-#     response = requests.get(api_endpoint, params=params).json()
-#     st.write("Caption: ", response)
+#     response = requests.get(api_endpoint, params=params)
+#     if response.status_code == 200:
+#         image = Image.open(requests.get(input_url, stream=True).raw).convert("RGB")
+#         st.image(image)
+#         st.write("Caption: ", response.json())
 
 
-## Upload_file:
+# # Upload_file:
 # uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"]) #Upload photo
 
 
@@ -47,7 +50,8 @@ st.header("Lets caption some pictures!")
 #     img = uploaded_file.getvalue()
 #     files = {'file': img}
 #     response = requests.post(api_endpoint, files=files)
-#     st.write("Caption: ", response.json())
+#     if response.status_code == 200:
+#         st.write("Caption: ", response.json())
 
 
 
@@ -59,8 +63,8 @@ st.header("Lets caption some pictures!")
 #     img = captured_photo.getvalue()
 #     files = {'file': img}
 #     response = requests.post(api_endpoint, files=files)
-
-#     st.write("Caption: ", response.json())
+    # if response.status_code == 200:
+    #     st.write("Caption: ", response.json())
 
 
 # else:
