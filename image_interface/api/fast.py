@@ -2,6 +2,9 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from transformers import AutoModelForCausalLM
 from image_interface.interface.main import open_image, preprocess_generated_caption, visual_questioning
+from PIL import Image
+from io import BytesIO
+
 app = FastAPI()
 app.state.model = AutoModelForCausalLM.from_pretrained("microsoft/git-base-coco")
 
@@ -15,19 +18,19 @@ app.add_middleware(
 )
 
 
-@app.get("/predict_image")
-def predict_upload(img_file_buffer):
-    image = open_image(img_file_buffer=img_file_buffer)
-    caption = preprocess_generated_caption(app.state.model, image)
+@app.post("/predict_image")
+async def create_upload_file(file: UploadFile):
+    if not file:
+        return {"message": "No upload file sent"}
+    else:
+        contents = await file.read()
+        image = Image.open(BytesIO(contents)).convert("RGB")
 
-    return str(caption)
+        caption = preprocess_generated_caption(app.state.model, image)
 
-@app.get("/predict_upload")
-def predict_local_image(image_path):
-    image = open_image(image_path=image_path)
-    caption = preprocess_generated_caption(app.state.model, image)
+        return str(caption)
 
-    return str(caption)
+
 
 @app.get("/predict_url")
 def predict_caption(url):
