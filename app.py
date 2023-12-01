@@ -3,6 +3,7 @@ import streamlit as st
 # from io import StringIO
 from PIL import Image
 import requests
+#import time
 # from gtts import gTTS
 # from io import BytesIO
 #from image_interface.interface.main import open_image,preprocess,generate_caption
@@ -18,57 +19,63 @@ st.header("Lets caption some pictures!")
 #st.write("This is :blue[test]")
 
 # Choice selector for the user
-# choice = st.radio("Choose an option:", ("Upload Image", "Provide URL", "Take a New Image"))
+choice = st.radio("Choose an option:", ("Upload Image", "Provide URL", "Take a New Image"))
 
-
-
-
-
+if choice == "Provide URL":
 
 # # URL:
-# input_url = st.text_input('put url')
+    input_url = st.text_input('put url')
 
-# if input_url is not None:
-#     # image = Image.open(requests.get(input_url, stream=True).raw).convert("RGB")
-#     # st.image(image)
-#     params = {"url": input_url}
-#     api_endpoint = "http://127.0.0.1:8000/predict_url"
-#     response = requests.get(api_endpoint, params=params)
-#     if response.status_code == 200:
-#         image = Image.open(requests.get(input_url, stream=True).raw).convert("RGB")
-#         st.image(image)
-#         st.write("Caption: ", response.json())
+    if input_url is not None:
+            # image = Image.open(requests.get(input_url, stream=True).raw).convert("RGB")
+            # st.image(image)
+        params = {"url": input_url}
+        api_endpoint = "http://127.0.0.1:8000/predict_url"
 
+               # Use st.spinner to indicate progress
+        #with st.spinner('Processing image...'):
+        response = requests.get(api_endpoint, params=params)
+            #time.sleep (4)
+
+        if response.status_code == 200:
+            image = Image.open(requests.get(input_url, stream=True).raw).convert("RGB")
+            st.image(image)
+            st.write("Caption: ", response.json())
+
+
+elif choice == "Upload Image":
 
 # # Upload_file:
-# uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"]) #Upload photo
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"]) #Upload photo
 
 
-# if uploaded_file is not None:
-#     st.image(uploaded_file, use_column_width=True)
-#     api_endpoint = "http://127.0.0.1:8000/predict_image"  # Replace with your actual FastAPI endpoint
-#     img = uploaded_file.getvalue()
-#     files = {'file': img}
-#     response = requests.post(api_endpoint, files=files)
-#     if response.status_code == 200:
-#         st.write("Caption: ", response.json())
+    if uploaded_file is not None:
+        st.image(uploaded_file, use_column_width=True)
+        api_endpoint = "http://127.0.0.1:8000/predict_image"
+        img = uploaded_file.getvalue()
+        files = {'file': img}
+        response = requests.post(api_endpoint, files=files)
+        if response.status_code == 200:
+            st.write("Caption: ", response.json())
 
-
+elif choice == "Take a New Image":
 
 # # Take photo:
-# captured_photo = st.camera_input("Choose an image...") #Take photo
+    captured_photo = st.camera_input("Choose an image...") #Take photo
 
-# if captured_photo is not None:
-#     api_endpoint = "http://127.0.0.1:8000/predict_image"  # Replace with your actual FastAPI endpoint
-#     img = captured_photo.getvalue()
-#     files = {'file': img}
-#     response = requests.post(api_endpoint, files=files)
-    # if response.status_code == 200:
-    #     st.write("Caption: ", response.json())
+    if captured_photo is not None:
+        api_endpoint = "http://127.0.0.1:8000/predict_image"
+        img = captured_photo.getvalue()
+        files = {'file': img}
+        response = requests.post(api_endpoint, files=files)
+        if response.status_code == 200:
+            st.write("Caption: ", response.json())
 
 
-# else:
-#     st.write("Choose an option")
+else:
+    st.write("Choose an option")
+
+
 
 # File uploader widget
 # uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
