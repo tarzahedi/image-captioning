@@ -10,7 +10,7 @@ import requests
 # from fastapi import FastAPI, File, UploadFile
 # from typing import Annotated
 # from image_interface.api.fast import predict_caption, predict_upload
-
+base_url = "http://127.0.0.1:8000/"
 # Streamlit app title
 st.title("Image Captioning")
 
@@ -30,7 +30,7 @@ if choice == "Provide URL":
             # image = Image.open(requests.get(input_url, stream=True).raw).convert("RGB")
             # st.image(image)
         params = {"url": input_url}
-        api_endpoint = "http://127.0.0.1:8000/predict_url"
+        api_endpoint = f"{base_url}predict_url"
 
                # Use st.spinner to indicate progress
         #with st.spinner('Processing image...'):
@@ -41,6 +41,17 @@ if choice == "Provide URL":
             image = Image.open(requests.get(input_url, stream=True).raw).convert("RGB")
             st.image(image)
             st.write("Caption: ", response.json())
+            question = st.text_input("question?")
+
+
+            if question is not None:
+                params = {"url": input_url, "question": question}
+                api_endpoint = f"{base_url}url_answer"
+                res = requests.get(api_endpoint, params=params)
+                if res.status_code == 200:
+                    st.write("Answer: ", res.json())
+            else:
+                st.wtire("say")
 
 
 elif choice == "Upload Image":
@@ -51,12 +62,30 @@ elif choice == "Upload Image":
 
     if uploaded_file is not None:
         st.image(uploaded_file, use_column_width=True)
-        api_endpoint = "http://127.0.0.1:8000/predict_image"
+        api_endpoint = f"{base_url}predict_image"
         img = uploaded_file.getvalue()
         files = {'file': img}
         response = requests.post(api_endpoint, files=files)
         if response.status_code == 200:
             st.write("Caption: ", response.json())
+
+            question = st.text_input("question?")
+
+
+            if question is not None:
+                files = {"file": img}
+                params = {"question":question}
+                api_endpoint = f"{base_url}visual_q"
+                res = requests.post(api_endpoint, files=files, params=params)
+                if res.status_code == 200:
+                    st.write("Answer: ", res.json())
+            else:
+                st.wtire("say")
+
+
+
+
+
 
 elif choice == "Take a New Image":
 
@@ -64,12 +93,24 @@ elif choice == "Take a New Image":
     captured_photo = st.camera_input("Choose an image...") #Take photo
 
     if captured_photo is not None:
-        api_endpoint = "http://127.0.0.1:8000/predict_image"
+        api_endpoint = f"{base_url}predict_image"
         img = captured_photo.getvalue()
         files = {'file': img}
         response = requests.post(api_endpoint, files=files)
         if response.status_code == 200:
             st.write("Caption: ", response.json())
+
+            question = st.text_input("question?")
+
+            if question is not None:
+                files = {"file": img}
+                params = {"question":question}
+                api_endpoint = f"{base_url}visual_q"
+                res = requests.post(api_endpoint, files=files, params=params)
+                if res.status_code == 200:
+                    st.write("Answer: ", res.json())
+            else:
+                st.wtire("say")
 
 
 else:

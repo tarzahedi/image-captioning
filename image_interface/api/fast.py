@@ -39,11 +39,29 @@ def predict_caption(url):
 
     return str(caption)
 
-@app.get("visual_q")
-def get_answer(img_file_buffer, question):
-    image = open_image(img_file_buffer)
-    answer = visual_questioning(image, question)
-    return answer
+
+
+
+
+@app.get("/url_answer")
+def url_answer(url, question):
+    image = open_image(url=url)
+    output = visual_questioning(image, question)
+
+    return str(output)
+
+@app.post("/visual_q")
+async def create_upload_file(file: UploadFile, question):
+    if not file:
+        return {"message": "No upload file sent"}
+    else:
+        contents = await file.read()
+        image = Image.open(BytesIO(contents)).convert("RGB")
+
+        output = visual_questioning(image, question)
+
+        return str(output)
+
 
 @app.get("/")
 def root():
