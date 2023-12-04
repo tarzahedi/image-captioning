@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit import session_state as ss
-from gtts import gTTS
+# from gtts import gTTS
 from io import BytesIO
 from IPython.display import Audio
 from PIL import Image
@@ -43,11 +43,11 @@ if choice == "Provide URL":
             st.image(image)
             caption = response.json()
             st.markdown("<p style='font-size:25px; font-family:sans-serif;'>Caption: {}</p>".format(response.json()), unsafe_allow_html=True)
-#TEXT TO SPEECH
-            sound_file = BytesIO()
-            tts = gTTS(caption, lang='en')
-            tts.write_to_fp(sound_file)
-            st.audio(sound_file, format="audio/mp3", start_time=0)
+# #TEXT TO SPEECH
+#             sound_file = BytesIO()
+#             tts = gTTS(caption, lang='en')
+#             tts.write_to_fp(sound_file)
+#             st.audio(sound_file, format="audio/mp3", start_time=0)
 
 #ASK YOUR IMAGE
             st.title(":camera_with_flash: :grey_question: :camera_with_flash: :grey_question: :camera_with_flash: 	:grey_question: :camera_with_flash: :grey_question: :camera_with_flash: :grey_question: :camera_with_flash: :grey_question: :camera_with_flash:")
@@ -80,11 +80,11 @@ elif choice == "Upload Image":
         if response.status_code == 200:
             caption = response.json()
             st.markdown("<p style='font-size:25px; font-family:sans-serif;'>Caption: {}</p>".format(response.json()), unsafe_allow_html=True)
-#TEXT TO SPEECH
-            sound_file = BytesIO()
-            tts = gTTS(caption, lang='en')
-            tts.write_to_fp(sound_file)
-            st.audio(sound_file, format="audio/mp3", start_time=0)
+# #TEXT TO SPEECH
+#             sound_file = BytesIO()
+#             tts = gTTS(caption, lang='en')
+#             tts.write_to_fp(sound_file)
+#             st.audio(sound_file, format="audio/mp3", start_time=0)
 
 #ASK YOUR IMAGE
             st.title(":camera_with_flash: :grey_question: :camera_with_flash: :grey_question: :camera_with_flash: 	:grey_question: :camera_with_flash: :grey_question: :camera_with_flash: :grey_question: :camera_with_flash: :grey_question: :camera_with_flash:")
@@ -111,11 +111,11 @@ elif choice == "Take a New Image":
         if response.status_code == 200:
             caption = response.json()
             st.markdown("<p style='font-size:25px; font-family:sans-serif;'>Caption: {}</p>".format(response.json()), unsafe_allow_html=True)
-#TEXT TO SPEECH
-            sound_file = BytesIO()
-            tts = gTTS(caption, lang='en')
-            tts.write_to_fp(sound_file)
-            st.audio(sound_file, format="audio/mp3", start_time=0)
+# #TEXT TO SPEECH
+#             sound_file = BytesIO()
+#             tts = gTTS(caption, lang='en')
+#             tts.write_to_fp(sound_file)
+#             st.audio(sound_file, format="audio/mp3", start_time=0)
 
  #ASK YOUR IMAGE
             st.title(":camera_with_flash: :grey_question: :camera_with_flash: :grey_question: :camera_with_flash: 	:grey_question: :camera_with_flash: :grey_question: :camera_with_flash: :grey_question: :camera_with_flash: :grey_question: :camera_with_flash:")
