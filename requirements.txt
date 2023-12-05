@@ -32,7 +32,7 @@ joblib
 memoized-property
 termcolor
 
-#user-interface
+# user-interface
 streamlit_option_menu
 gTTS
 io
