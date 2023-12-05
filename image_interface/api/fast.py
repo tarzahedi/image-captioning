@@ -1,9 +1,10 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from transformers import AutoModelForCausalLM
-from image_interface.interface.main import open_image, preprocess_generated_caption, visual_questioning
+from transformers import AutoProcessor, AutoModelForCausalLM, ViltProcessor, ViltForQuestionAnswering
+# from image_interface.interface.main import open_image, preprocess_generated_caption, visual_questioning
 from PIL import Image
 from io import BytesIO
+import requests
 
 app = FastAPI()
 app.state.model = AutoModelForCausalLM.from_pretrained("microsoft/git-base-coco")
@@ -26,28 +27,37 @@ async def create_upload_file(file: UploadFile):
         contents = await file.read()
         image = Image.open(BytesIO(contents)).convert("RGB")
 
-        caption = preprocess_generated_caption(app.state.model, image)
+        preprocessor = AutoProcessor.from_pretrained("microsoft/git-base-coco")
+        pixel_values = preprocessor(images=image, return_tensors="pt").pixel_values
+        generated_ids = app.state.model.generate(pixel_values=pixel_values, max_length=50)
+        generated_caption = preprocessor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        return str(generated_caption)
 
-        return str(caption)
 
 
 
 @app.get("/predict_url")
 def predict_caption(url):
-    image = open_image(url=url)
-    caption = preprocess_generated_caption(app.state.model, image)
-
-    return str(caption)
-
+    image = Image.open(requests.get(url=url, stream=True).raw).convert('RGB')
+    preprocessor = AutoProcessor.from_pretrained("microsoft/git-base-coco")
+    pixel_values = preprocessor(images=image, return_tensors="pt").pixel_values
+    generated_ids = app.state.model.generate(pixel_values=pixel_values, max_length=50)
+    generated_caption = preprocessor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+    return str(generated_caption)
 
 
 
 
 @app.get("/url_answer")
 def url_answer(url, question):
-    image = open_image(url=url)
-    output = visual_questioning(image, question)
-
+    image = Image.open(requests.get(url=url, stream=True).raw).convert('RGB')
+    processor = ViltProcessor.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
+    model = ViltForQuestionAnswering.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
+    encoding = processor(image, question, return_tensors="pt")
+    outputs = model(**encoding)
+    logits = outputs.logits
+    idx = logits.argmax(-1).item()
+    output = model.config.id2label[idx]
     return str(output)
 
 @app.post("/visual_q")
@@ -58,8 +68,13 @@ async def create_upload_file(file: UploadFile, question):
         contents = await file.read()
         image = Image.open(BytesIO(contents)).convert("RGB")
 
-        output = visual_questioning(image, question)
-
+        processor = ViltProcessor.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
+        model = ViltForQuestionAnswering.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
+        encoding = processor(image, question, return_tensors="pt")
+        outputs = model(**encoding)
+        logits = outputs.logits
+        idx = logits.argmax(-1).item()
+        output = model.config.id2label[idx]
         return str(output)
 
 
