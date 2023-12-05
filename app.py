@@ -7,7 +7,8 @@ import requests
 from streamlit_option_menu import option_menu
 
 
-base_url = "http://127.0.0.1:8000/"
+#base_url = "http://127.0.0.1:8000/"
+base_url = "https://imagecap-siqf5cui7q-ew.a.run.app/"
 
 # Streamlit app title
 st.title(":camera_with_flash: :speech_balloon: :camera_with_flash: :speech_balloon: :camera_with_flash: :speech_balloon: :camera_with_flash: :speech_balloon: :camera_with_flash: :speech_balloon: :camera_with_flash:")
