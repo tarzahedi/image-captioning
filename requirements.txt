@@ -35,4 +35,6 @@ termcolor
 # user-interface
 streamlit_option_menu
 gTTS
+SpeechRecognition
+time
 # io
