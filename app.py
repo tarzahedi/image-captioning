@@ -42,7 +42,6 @@ with st.sidebar:
         ["Home", "Upload Image", 'Provide URL', "Take a New Image"],
         icons=['house', 'gear', 'eye', 'camera'],
         default_index=1)
-    selected
 
 ## HOME PAGE
 
