@@ -36,5 +36,5 @@ termcolor
 streamlit_option_menu
 gTTS
 SpeechRecognition
-time
+# time
 # io
