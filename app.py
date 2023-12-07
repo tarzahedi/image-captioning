@@ -1,8 +1,6 @@
-import time
 from io import BytesIO
 
 import requests
-import speech_recognition as sr  # (SpeechRecognition in pypi)
 import streamlit as st
 from gtts import gTTS
 from PIL import Image
@@ -10,25 +8,10 @@ from streamlit import session_state as ss
 from streamlit_option_menu import option_menu
 
 
-def transcribe_speech():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        r.adjust_for_ambient_noise(source)
-        # with st.spinner("Listening..."):
-        audio = r.listen(source)
-        try:
-            text = r.recognize_google(audio)
-            return text
-        except sr.UnknownValueError:
-            st.write("Could not understand audio")
-        except sr.RequestError as e:
-            st.write(
-                "Could not request results from Google Speech Recognition service; {0}"
-                .format(e))
 
 
-base_url = "http://127.0.0.1:8000/"
-#base_url = "https://imagecap-siqf5cui7q-ew.a.run.app/"
+# base_url = "http://127.0.0.1:8000/"
+base_url = "https://imagecap-ojbkmhq2vq-ew.a.run.app/"
 
 # Streamlit app title
 st.title(":camera_with_flash: :speech_balloon: Let's Caption Your Image")
@@ -110,58 +93,24 @@ if selected == "Provide URL":
                         ":camera_with_flash: :grey_question: Now Ask It a Question:"
                     )
 
-                    genre = st.radio("", ["Voice", "Text"], horizontal=True)
-
-                    if genre == "Text":
-                        question = st.text_input("Your question:")
-                        if st.button("Get Answer") and question:
-                            params = {"url": input_url, "question": question}
-                            api_endpoint = f"{base_url}url_answer"
-                            res = requests.get(api_endpoint, params=params)
-                            if res.status_code == 200:
-                                answer = res.json()
-                                st.markdown(
-                                    "<p style='font-size:25px; font-family:sans-serif;'>Answer: {}</p>"
-                                    .format(res.json()),
-                                    unsafe_allow_html=True)
-                                #TEXT TO SPEECH - Answer
-                                sound_file = BytesIO()
-                                tts = gTTS(answer, lang='en')
-                                tts.write_to_fp(sound_file)
-                                st.audio(sound_file,
-                                         format="audio/mp3",
-                                         start_time=0)
-
-        #SPEECH TO TEXT - Question
-
-                    elif genre == "Voice":
-                        ready_button = st.button("Ask your question",
-                                                 key='ready_button')
-                        if ready_button:
-                            with st.spinner("Listening..."):
-                                text = transcribe_speech()
-                                time.sleep(1)
-                            if text:
-                                st.write(f"Question: {text}?")
-                                params = {
-                                    "url": input_url,
-                                    "question": f"{text}?"
-                                }
-                                api_endpoint = f"{base_url}url_answer"
-                                res = requests.get(api_endpoint, params=params)
-                                if res.status_code == 200:
-                                    answer = res.json()
-                                    st.markdown(
-                                        "<p style='font-size:25px; font-family:sans-serif;'>Answer: {}</p>"
-                                        .format(res.json()),
-                                        unsafe_allow_html=True)
-                                    #TEXT TO SPEECH - Answer
-                                    sound_file = BytesIO()
-                                    tts = gTTS(answer, lang='en')
-                                    tts.write_to_fp(sound_file)
-                                    st.audio(sound_file,
-                                             format="audio/mp3",
-                                             start_time=0)
+                    question = st.text_input("Your question:")
+                    if st.button("Get Answer") and question:
+                        params = {"url": input_url, "question": question}
+                        api_endpoint = f"{base_url}url_answer"
+                        res = requests.get(api_endpoint, params=params)
+                        if res.status_code == 200:
+                            answer = res.json()
+                            st.markdown(
+                                "<p style='font-size:25px; font-family:sans-serif;'>Answer: {}</p>"
+                                .format(res.json()),
+                                unsafe_allow_html=True)
+                            #TEXT TO SPEECH - Answer
+                            sound_file = BytesIO()
+                            tts = gTTS(answer, lang='en')
+                            tts.write_to_fp(sound_file)
+                            st.audio(sound_file,
+                                        format="audio/mp3",
+                                        start_time=0)
 
 ## UPLOAD IMAGE
 elif selected == "Upload Image":
@@ -194,62 +143,29 @@ elif selected == "Upload Image":
                     ":camera_with_flash: :grey_question: Now Ask It a Question:"
                 )
 
-                genre = st.radio("", ["Voice", "Text"], horizontal=True)
+                question = st.text_input("Your question:")
 
-                if genre == "Text":
-                    question = st.text_input("Your question:")
+                if st.button("Get Answer") and question:
+                    files = {"file": img}
+                    params = {"question": question}
+                    api_endpoint = f"{base_url}visual_q"
+                    res = requests.post(api_endpoint,
+                                        files=files,
+                                        params=params)
+                    if res.status_code == 200:
+                        answer = res.json()
+                        st.markdown(
+                            "<p style='font-size:25px; font-family:sans-serif;'>Answer: {}</p>"
+                            .format(res.json()),
+                            unsafe_allow_html=True)
+                        #TEXT TO SPEECH - Answer
+                        sound_file = BytesIO()
+                        tts = gTTS(answer, lang='en')
+                        tts.write_to_fp(sound_file)
+                        st.audio(sound_file,
+                                    format="audio/mp3",
+                                    start_time=0)
 
-                    if st.button("Get Answer") and question:
-                        files = {"file": img}
-                        params = {"question": question}
-                        api_endpoint = f"{base_url}visual_q"
-                        res = requests.post(api_endpoint,
-                                            files=files,
-                                            params=params)
-                        if res.status_code == 200:
-                            answer = res.json()
-                            st.markdown(
-                                "<p style='font-size:25px; font-family:sans-serif;'>Answer: {}</p>"
-                                .format(res.json()),
-                                unsafe_allow_html=True)
-                            #TEXT TO SPEECH - Answer
-                            sound_file = BytesIO()
-                            tts = gTTS(answer, lang='en')
-                            tts.write_to_fp(sound_file)
-                            st.audio(sound_file,
-                                     format="audio/mp3",
-                                     start_time=0)
-
-                elif genre == "Voice":
-                    ready_button = st.button("Ask your question",
-                                             key='ready_button')
-
-                    if ready_button:
-                        with st.spinner("Listening..."):
-                            text = transcribe_speech()
-                            time.sleep(1)
-
-                        if text:
-                            st.write(f"Question: {text}?")
-                            files = {"file": img}
-                            params = {"question": f"{text}?"}
-                            api_endpoint = f"{base_url}visual_q"
-                            res = requests.post(api_endpoint,
-                                                files=files,
-                                                params=params)
-                            if res.status_code == 200:
-                                answer = res.json()
-                                st.markdown(
-                                    "<p style='font-size:25px; font-family:sans-serif;'>Answer: {}</p>"
-                                    .format(res.json()),
-                                    unsafe_allow_html=True)
-                                #TEXT TO SPEECH - Answer
-                                sound_file = BytesIO()
-                                tts = gTTS(answer, lang='en')
-                                tts.write_to_fp(sound_file)
-                                st.audio(sound_file,
-                                         format="audio/mp3",
-                                         start_time=0)
 
 ## TAKE A NEW IMAGE
 elif selected == "Take a New Image":
@@ -278,60 +194,26 @@ elif selected == "Take a New Image":
                     ":camera_with_flash: :grey_question: Now Ask It a Question:"
                 )
 
-                genre = st.radio("", ["Voice", "Text"], horizontal=True)
 
-                if genre == "Text":
+                question = st.text_input("Your question:")
 
-                    question = st.text_input("Your question:")
-
-                    if st.button("Get Answer") and question:
-                        files = {"file": img}
-                        params = {"question": question}
-                        api_endpoint = f"{base_url}visual_q"
-                        res = requests.post(api_endpoint,
-                                            files=files,
-                                            params=params)
-                        if res.status_code == 200:
-                            answer = res.json()
-                            st.markdown(
-                                "<p style='font-size:25px; font-family:sans-serif;'>Answer: {}</p>"
-                                .format(res.json()),
-                                unsafe_allow_html=True)
-                            #TEXT TO SPEECH - Answer
-                            sound_file = BytesIO()
-                            tts = gTTS(answer, lang='en')
-                            tts.write_to_fp(sound_file)
-                            st.audio(sound_file,
-                                     format="audio/mp3",
-                                     start_time=0)
-
-                elif genre == "Voice":
-                    ready_button = st.button("Ask your question",
-                                             key='ready_button')
-
-                    if ready_button:
-                        with st.spinner("Listening..."):
-                            text = transcribe_speech()
-                            time.sleep(1)
-
-                        if text:
-                            st.write(f"Question: {text}?")
-                            files = {"file": img}
-                            params = {"question": f"{text}?"}
-                            api_endpoint = f"{base_url}visual_q"
-                            res = requests.post(api_endpoint,
-                                                files=files,
-                                                params=params)
-                            if res.status_code == 200:
-                                answer = res.json()
-                                st.markdown(
-                                    "<p style='font-size:25px; font-family:sans-serif;'>Answer: {}</p>"
-                                    .format(res.json()),
-                                    unsafe_allow_html=True)
-                                #TEXT TO SPEECH - Answer
-                                sound_file = BytesIO()
-                                tts = gTTS(answer, lang='en')
-                                tts.write_to_fp(sound_file)
-                                st.audio(sound_file,
-                                         format="audio/mp3",
-                                         start_time=0)
+                if st.button("Get Answer") and question:
+                    files = {"file": img}
+                    params = {"question": question}
+                    api_endpoint = f"{base_url}visual_q"
+                    res = requests.post(api_endpoint,
+                                        files=files,
+                                        params=params)
+                    if res.status_code == 200:
+                        answer = res.json()
+                        st.markdown(
+                            "<p style='font-size:25px; font-family:sans-serif;'>Answer: {}</p>"
+                            .format(res.json()),
+                            unsafe_allow_html=True)
+                        #TEXT TO SPEECH - Answer
+                        sound_file = BytesIO()
+                        tts = gTTS(answer, lang='en')
+                        tts.write_to_fp(sound_file)
+                        st.audio(sound_file,
+                                    format="audio/mp3",
+                                    start_time=0)

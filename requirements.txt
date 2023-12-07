@@ -25,6 +25,8 @@ gcsfs
 # mlflow
 fastapi
 uvicorn
+python-multipart
+
 
 # utilities
 six>=1.14
@@ -35,6 +37,7 @@ termcolor
 # user-interface
 streamlit_option_menu
 gTTS
-SpeechRecognition
+#SpeechRecognition
+#PyAudio
 # time
 # io
